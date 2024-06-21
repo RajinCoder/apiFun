@@ -17,13 +17,15 @@ dictionary = {
   'result_info': [],
   'starting_at': []
   }
+print(huge_dict_matches)
+def append_dict(dictionary, huge_dict_matches):
+  for index in range(len(huge_dict_matches)):
+    row = huge_dict_matches[index]
 
-for index in range(1, len(huge_dict_matches)):
-  row = huge_dict_matches[index]
+    dictionary['name'].append(row.get('name'))
+    dictionary['result_info'].append(row.get('result_info'))
+    dictionary['starting_at'].append(row.get('starting_at'))
 
-  dictionary['name'].append(row.get('name'))
-  dictionary['result_info'].append(row.get('result_info'))
-  dictionary['starting_at'].append(row.get('starting_at'))
 
 pdFrame = pd.DataFrame.from_dict(dictionary)
 
