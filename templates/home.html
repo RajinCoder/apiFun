@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>{{ subtitle }}</h2>
+<div>
+   <div class="img-search">
+      <img src="{{ url_for('static', filename='images/goat_trophy.jpg') }}" alt="Goat kissing world cup">
+      <input type="search" name="q" id="first-player-search">
+  </div>
+  <div class="img-search">
+      <img src="{{ url_for('static', filename='images/second-trophy.jpg') }}" alt="Ronaldo 5 champion leagues">
+      <input type="search" name="q" id="second-player-search">
+  </div>
+  <div>
+   <button type="submit">COMPARE</button>
+  </div>
+</div>
+{% endblock content %}
