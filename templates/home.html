@@ -4,21 +4,42 @@
     <div class="title">
         <h2>{{ subtitle }}</h2>
     </div>
-   <div class="img-search">
-        <div class="img-search-box">
-            <img src="{{ url_for('static', filename='images/goat_trophy.jpg') }}" alt="Goat kissing world cup">
-            <input type="search" name="query" id="first-player-search" placeholder="Player 1">
-        </div>
-        <div style="display: flex; align-items:center;">
-            <h3>VS</h3>
-        </div>
-        <div class="img-search-box">
-            <img src="{{ url_for('static', filename='images/second-trophy.jpg') }}" alt="Ronaldo 5 champion leagues">
-            <input type="search" name="query" id="second-player-search" placeholder="Player 2">
-        </div>
-  </div>
-  <div class="compare">
-   <button type="submit">COMPARE</button>
-  </div>
+    <form action="" method="POST">
+        {{form.hidden_tag()}}
+        <div class="img-search">
+            <div class="img-search-box">
+                <img src="{{ url_for('static', filename='images/goat_trophy.jpg') }}" alt="Goat kissing world cup">
+                {% if form.player1.errors %}
+                    {{ form.player1(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.player1.errors%}
+                        <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.player1(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div style="display: flex; align-items:center;">
+                <h3>VS</h3>
+            </div>
+            <div class="img-search-box">
+                <img src="{{ url_for('static', filename='images/second-trophy.jpg') }}" alt="Ronaldo 5 champion leagues">
+                {% if form.player2.errors %}
+                    {{ form.player2(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.player2.errors%}
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.player2(class="form-control form-control-lg") }}
+            {% endif %}
+            </div>
+      </div>
+      <div class="compare">
+       {{ form.submit(class="btn btn-outline-info") }}
+      </div>
+    </form>
 </div>
 {% endblock content %}

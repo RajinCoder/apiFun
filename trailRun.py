@@ -2,38 +2,38 @@ import requests
 import pandas as pd
 import sqlalchemy as db
 
-url = 'https://api.sportmonks.com/v3/football/fixtures'
+url = 'https://api.sportmonks.com/v3/football/players'
 header = {'Authorization': '8VXrDStCmKp2kNnZHwoaYv3mMYCA3oAwJcRqxzg5f5k4k8Ek3bNv7J5AhWqd'}
 
 response = requests.get(url, headers=header)
-engine = db.create_engine('sqlite:///soccer_matches.db')
 
+if response.status_code != 200:
+    raise Exception("API request failed with status code " + str(response.status_code))
 
-huge_dict_matches = response.json()['data']
+engine = db.create_engine('sqlite:///soccer_players.db')
 
+array_of_dict = response.json().get('data', [])
+playerInfo = []
 
-dictionary = {
-  'name': [],
-  'result_info': [],
-  'starting_at': []
-  }
-print(huge_dict_matches)
-def append_dict(dictionary, huge_dict_matches):
-  for index in range(len(huge_dict_matches)):
-    row = huge_dict_matches[index]
+for row in array_of_dict:
+    playerInfo.append({
+        'name': row.get('name'),
+        'id': row.get('id'),
+        'position_id': row.get('position_id'),
+        'nationality_id': row.get('nationality_id'),
+        'height': row.get('height'),
+        'weight': row.get('weight'),
+        'date_of_birth': row.get('date_of_birth')
+    })
 
-    dictionary['name'].append(row.get('name'))
-    dictionary['result_info'].append(row.get('result_info'))
-    dictionary['starting_at'].append(row.get('starting_at'))
+pdFrame = pd.DataFrame(playerInfo)
 
-
-pdFrame = pd.DataFrame.from_dict(dictionary)
-
-pdFrame.to_sql('soccer_matches', con=engine, if_exists='replace', index=False)
+pdFrame.to_sql('soccer_players', con=engine, if_exists='replace', index=False)
 
 with engine.connect() as connection:
-   query_result = connection.execute(db.text("SELECT * FROM soccer_matches LIMIT 3;")).fetchall()
-   print(pd.DataFrame(query_result))
-
-
-
+    query = db.text("SELECT * FROM soccer_players WHERE name='Daniel Munthe Agger';")
+    query_result = connection.execute(query).fetchall()
+    if query_result:
+        print(pd.DataFrame(query_result, columns=pdFrame.columns))
+    else:
+        print("No results found.")
